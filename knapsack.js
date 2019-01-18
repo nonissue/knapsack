@@ -14,6 +14,23 @@ when a single course would be better.
 	Despite this being a lower average.
 */
 
+function normalized_avg(cur_set) {
+
+    if (!cur_set.length) {
+        return "error!";
+    }
+
+    const total_weight = cur_set.reduce(function(prev, curr) {
+        return prev + curr.w;
+    }, 0);
+
+    const avg = cur_set.reduce(function(prev, curr) {
+        return prev + ((curr.w / total_weight) * curr.v)}, 
+    0);
+    
+    return avg
+}
+
 function knapsack(marks, credits) {
     var memo = [];
 
@@ -32,34 +49,14 @@ function knapsack(marks, credits) {
 
     function getLast() {
         var lastRow = memo[memo.length - 1];
-        var weighted_avg = 0;
         var res = lastRow[lastRow.length - 1];
-        var res_list = res["subset"];
 
-        if (!res_list.length) {
-            return "error!";
-        }
-
-        var total_weight = res_list.map(x => (x = x.w)).reduce((a, b) => a + b);
-
-        for (let q = 0; q < res_list.length; q++) {
-            var adjusted_weight = (res_list[q].w / total_weight) * res_list[q].v;
-            weighted_avg += adjusted_weight;
-        }
-
-        const adjusted_avg = Math.round(weighted_avg * 100) / 100
-        // console.log("Adjusted Avg: " + adjusted_avg);
-
-
-        Object.assign(res, {
-            avg: adjusted_avg
-        })
-        // console.log(res)
+        console.log(res);
         return res
     }
 
     function getSolution(row, cap) {
-        const NO_SOLUTION = { maxValue: 0, subset: [] };
+        const NO_SOLUTION = { maxValue: 0, normalizedAvg: 0, subset: [] };
         var col = cap - 1;
         var lastItem = marks[row];
 
@@ -85,22 +82,24 @@ function knapsack(marks, credits) {
             return lastSolution;
         }
 
-        var lastValue = lastSolution.maxValue;
+        var lastAvg = lastSolution.normalizedAvg;
+
         var lastSubValue = lastSubSolution.maxValue;
 
-        // Maybe this is the problem?
         var newValue = lastSubValue + lastItem.v * lastItem.w;
-        // var newValue = lastSubValue + lastItem.v * lastItem.w;
+        var lastSubsetCopy = lastSubSolution.subset.slice(); // dunno if this is necessary
 
-        if (newValue >= lastValue) {
+        lastSubsetCopy.push(lastItem)
+        const newAvg = normalized_avg(lastSubsetCopy)
+   
+        if (newAvg >= lastAvg) {
             var _lastSubSet = lastSubSolution.subset.slice();
             _lastSubSet.push(lastItem);
-            return { maxValue: newValue, subset: _lastSubSet };
+            return { maxValue: newValue, normalizedAvg: newAvg, subset: _lastSubSet };
         } else {
             return lastSolution;
         }
     }
 }
-
 
 module.exports = knapsack;

@@ -13,9 +13,9 @@ const marks = [
 ];
 
 const other_marks = [
-    { w: 5, v: 50},
-    { w: 2, v: 50},
-    { w: 3, v: 51},
+    { w: 5, v: 50 },
+    { w: 2, v: 50 },
+    { w: 3, v: 51 },
 ]
 
 describe('real bad tests mmmmmm', () => {
@@ -51,7 +51,37 @@ describe('real bad tests mmmmmm', () => {
 
     it('Chooses more courses if they contribute to a better average', () => {
         const res = knapsack(other_marks, 5);
-        assert.deepEqual(res.subset, [{"v": 50, "w": 2}, {"v": 51, "w": 3}])
+        assert.deepEqual(res.subset, [{ w: 2, v: 50 }, { w: 3, v: 51 }])
         // assert.equal(test4.avg, 100)
     });
+
+    it('Calculates the correct weighted averages', () => {
+        const test = [
+            { w: 5, v: 91 },
+            { w: 3, v: 91 },
+            { w: 2, v: 90 }
+        ]
+
+        expect(knapsack(test, 5).subset).toEqual([{ w: 5, v: 91 }]);
+
+    });
+
+    it('Calculates the correct weighted averages correctly with same marks in different order', () => {
+        const test = [
+            { w: 3, v: 91 },
+            { w: 2, v: 90 },
+            { w: 5, v: 91 }
+        ]
+
+        expect(knapsack(test, 5).subset).toEqual([{ w: 5, v: 91 }]);
+
+    });
+
+
+    it("Calculates the correct weighted averages correctly with same marks in different order", () => {
+        const test = [{ w: 3, v: 91 }, { w: 2, v: 90 }, { w: 5, v: 90.6 }];
+
+        expect(knapsack(test, 5).subset).toEqual([{ w: 5, v: 90.6 }]);
+    });
+
 });

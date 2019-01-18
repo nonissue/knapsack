@@ -1,0 +1,7 @@
+{
+  "name": "knapsack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "andy@nonissue.org",
+  "license": "MIT"
+}

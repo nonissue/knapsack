@@ -12,3 +12,6 @@ const marks = [
 ];
 
 const test = knapsack(marks, 5);
+const test2 = knapsack(marks, 4);
+
+const test3 = knapsack(marks, 6);
